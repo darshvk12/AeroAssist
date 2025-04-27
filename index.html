@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airplane Ticket Booking System</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Styling for buttons */
+        .form-group-buttons {
+            display: flex;
+            gap: 15px; /* Adds space between buttons */
+        }
+
+        button[type="submit"],
+        button.delete-button {
+            flex: 1; /* Makes both buttons have equal width */
+            background-color: #4CAF50; /* Default background for the submit button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button.delete-button {
+            background-color: #f44336; /* Background for the "Delete Booking" button */
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .status-display {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .view-bookings {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .view-bookings a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Airplane Ticket Booking System</h1>
+        <form id="bookingForm">
+            <div class="form-group">
+                <label for="flight">Select Flight</label>
+                <select id="flight" required>
+                    <option value="" disabled selected>Select a flight</option>
+                    <option value="Flight 101">Flight 101 - Mumbai to Delhi (Dep: 10:00 AM, Arr: 12:30 PM)</option>
+                    <option value="Flight 202">Flight 202 - Delhi to Mumbai (Dep: 1:00 PM, Arr: 3:30 PM)</option>
+                    <option value="Flight 303">Flight 303 - Mumbai to Delhi (Dep: 5:00 PM, Arr: 7:30 PM)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="passengerName">Passenger Name</label>
+                <input type="text" id="passengerName" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group-buttons">
+                <button type="submit">Book Ticket</button>
+                <button type="button" class="delete-button" onclick="confirmDelete()">Delete Booking</button>
+            </div>
+        </form>
+        <div id="confirmationMessage" class="status-display"></div>
+        <div class="view-bookings">
+            <a href="bookings.html" target="_blank">View Bookings</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bookingForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const flight = document.getElementById('flight').value;
+            const passengerName = document.getElementById('passengerName').value;
+            const email = document.getElementById('email').value;
+            const confirmationMessage = document.getElementById('confirmationMessage');
+
+            if (flight && passengerName && email) {
+                // Store booking details in localStorage
+                const bookingDetails = {
+                    flight: flight,
+                    passengerName: passengerName,
+                    email: email,
+                    date: new Date().toLocaleString()
+                };
+                localStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+
+                confirmationMessage.textContent = `Booking confirmed for ${passengerName} on ${flight}. Confirmation email will be sent to ${email}.`;
+                confirmationMessage.style.color = 'green';
+            } else {
+                confirmationMessage.textContent = 'Please fill out all fields correctly.';
+                confirmationMessage.style.color = 'red';
+            }
+        });
+
+        function confirmDelete() {
+            const confirmation = window.confirm('Are you sure you want to delete this booking? This action cannot be undone.');
+            const confirmationMessage = document.getElementById('confirmationMessage');
+
+            if (confirmation) {
+                // Clear booking details from localStorage
+                localStorage.removeItem('bookingDetails');
+                document.getElementById('bookingForm').reset();
+                confirmationMessage.textContent = 'Your booking has been successfully deleted.';
+                confirmationMessage.style.color = 'orange';
+            } else {
+                confirmationMessage.textContent = 'Booking deletion canceled.';
+                confirmationMessage.style.color = 'gray';
+            }
+        }
+    </script>
+</body>
+</html>
