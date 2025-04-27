@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Runway Status</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #00695c;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #004d40;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #004d40;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #004d40;
+    background-color: #e0f2f1;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #00796b;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #004d40;
+}
+
+.status-display {
+    margin-top: 30px;
+    background-color: #f1f8e9;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #7cb342;
+}
+
+.status-display p {
+    font-size: 1.1rem;
+    color: #388e3c;
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Current Runway Status</h1>
+        <div id="statusDisplay" class="status-display">
+            <!-- Updated runway status will be shown here -->
+        </div>
+    </div>
+
+    <script>
+function displayRunwayStatus() {
+    const runwayId = localStorage.getItem('runwayId');
+    const status = localStorage.getItem('status');
+
+    const statusDisplay = document.getElementById('statusDisplay');
+    if (runwayId && status) {
+        statusDisplay.innerHTML = `
+            <p><strong>Runway ID:</strong> ${runwayId}</p>
+            <p><strong>Status:</strong> ${status}</p>
+	
+        `;
+    } else {
+        statusDisplay.innerHTML = '<p>No status available. Please update the runway status.</p>';
+    }
+}
+
+// Refresh the status every 2 seconds
+setInterval(displayRunwayStatus, 2000);
+
+// Initial call to display the status immediately on load
+displayRunwayStatus();
+
+</script>
+</body>
+</html>
