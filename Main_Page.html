@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airline Traffic Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Questa+Grande:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+        /* General Styles */
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('plane.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #3AB8FF;
+            padding: 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-family: 'Questa Grande', serif;
+            font-size: 2.5em;
+            color: white;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Main Content and Header Offset */
+        .main-content {
+            width: 100%;
+            text-align: center;
+            margin-top: 140px; /* Adjusted for fixed header */
+            flex-grow: 1;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            position: sticky;
+            top: 80px; /* Adjust position relative to header */
+            z-index: 999;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            background-color: #E0C7FF;
+            color: #333;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #D8A7FF;
+        }
+
+        /* Content Box Styles */
+        .content-box {
+            background-color: rgba(230, 230, 250, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            text-align: justify;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .content-box.active {
+            display: block;
+        }
+        .chat {
+            background-color: rgba(230, 230, 250, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .chat.active {
+            display: block;
+        }
+        /* About Section Styles */
+        .about-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .about-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            text-align: center;
+        }
+
+        .about-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Login */
+        .form-box {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            text-align: center;
+            margin: 0 auto;
+            transition: transform 0.3s;
+        }
+
+        .form-box:hover {
+            transform: scale(1.05);
+        }
+
+        .form-box h2 {
+            font-family: 'Questa Grande', serif;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .form-box .input-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .form-box input[type="text"],
+        .form-box input[type="password"],
+        .form-box input[type="email"] {
+            width: 100%;
+            padding: 15px 10px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s;
+        }
+
+        .form-box input[type="text"]:focus,
+        .form-box input[type="password"]:focus,
+        .form-box input[type="email"]:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+
+        .form-box button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-box button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .form-box a {
+            color: #007bff;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .form-box a:hover {
+            color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #00aaff;
+            font-size: 1em;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Airline Traffic Management</h1>
+</header>
+
+<body>
+
+<header>
+    <h1>Airline Traffic Management</h1>
+</header>
+
+<div class="main-content">
+    <nav>
+        <ul>
+            <li><a href="#" onclick="showSection('home')">Home</a></li>
+            <li><a href="#" onclick="showSection('traffic')">Traffic Management Info</a></li>
+            <li><a href="#" onclick="showSection('weather')">Weather Insights</a></li>
+	    <li><a href="#" onclick="showSection('about')">About Us</a></li>
+            <li><a href="#" onclick="showSection('contact')">Contact Us</a></li>
+            <li><a href="#" onclick="showSection('login')">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content of Home Section -->
+<div id="home" class="content-box active">
+    <h2>Welcome to Airline Traffic Management</h2>
+    <p>We are pioneering advancements in airport traffic management through cutting-edge technology and seamless integration. Our mission is clear and impactful: to enhance the safety, efficiency, and flow of air traffic with modern, real-time control systems. We recognize the intricate nature of today’s aviation industry, where precision is essential and every second matters. With unwavering dedication, we aim to create a safe, efficient, and innovative environment that benefits all—airlines, air traffic controllers, airport staff, and travelers. Our approach ensures that every interaction within the airport ecosystem is supported by reliability, clarity, and technological excellence.</p>
+    <h3>Our Mission</h3>
+    <p>To enhance the safety and efficiency of air travel through state-of-the-art technology and expert analysis.our mission is to revolutionize airport traffic management through innovative technology and unmatched precision. We are dedicated to ensuring safety, efficiency, and seamless coordination, making the skies safer and airport operations more reliable for all. By implementing state-of-the-art monitoring systems and preemptive safety measures, we uphold the highest safety standards. Our focus on operational excellence, powered by real-time data and automation, minimizes delays and enhances airport efficiency. We drive continuous innovation with AI-driven insights that redefine traditional air traffic control. Committed to sustainability, we optimize flight paths and scheduling to support eco-friendly practices, reducing the carbon footprint of operations. Our globally adaptable system serves airports of all sizes, providing round-the-clock support that fosters trust, collaboration, and smooth flight operations. The future of air travel lies in smarter, safer, and more efficient control, and we strive to be at the heart of this transformation.</p>
+    <h3>Our Services</h3>
+    <p>We offer a range of comprehensive services designed to transform airport traffic control. Our real-time runway monitoring system provides continuous oversight and automated alerts to ensure that runway operations remain safe and smooth. We optimize flight coordination and scheduling using advanced algorithms that manage traffic flow, minimize delays, and adapt seamlessly to changing conditions. Our interactive air traffic management console is built for ease of use, equipping controllers with a user-friendly dashboard that enhances collaboration and customizes views to highlight essential flight information. Our chatbot assistant serves passengers and airlines alike, delivering real-time support and flight status updates to streamline communication. We also offer data-driven insights and reports, providing performance analytics and customizable KPIs to help airports enhance their operations. Every feature of our system is designed with the goal of supporting efficient, safe, and modern air traffic control.</p>
+</div>
+
+
+    <div id="about" class="content-box">
+        <h2>About Us</h2>
+        <p>We are a dedicated team focused on enhancing the efficiency and safety of air travel through innovative traffic management solutions.</p>
+        <div class="about-container">
+            <div class="about-card">
+                <img src="darsh.jpg">
+                <h3>Darsh Davawala</h3>
+                <p>Roll Number 23</p>
+            </div>
+            <div class="about-card">
+                <img src="dhruvmik.jpg">
+                <h3>Dhruvmik Divecha</h3>
+                <p>Roll Number 28</p>
+            </div>
+            <div class="about-card">
+                <img src="dev.jpg">
+                <h3>Dev Gandhi</h3>
+                <p>Roll Number 33</p>
+            </div>
+        </div>
+    </div>
+
+ 
+<!-- Traffic Management Info Section -->
+<div id="traffic" class="content-box">
+    <h2>Traffic Management Information</h2>
+    <p>Our Traffic Management Info section provides a comprehensive understanding of how we coordinate air traffic and optimize the flow of aircraft within airspace and at airports. This service aims to enhance safety, minimize delays, and ensure efficient use of resources.</p>
+
+    <h3>Key Features of Our Traffic Management System</h3>
+    <ul>
+        <li><strong>Air Traffic Control (ATC) Integration:</strong> Our system is seamlessly integrated with Air Traffic Control systems, allowing us to receive and send real-time updates about flight paths, altitude, and any changes in airspace congestion. This ensures that air traffic controllers and airlines are always working with the most up-to-date data.</li>
+        <li><strong>Flight Coordination and Scheduling:</strong> Using sophisticated algorithms and real-time data, our system dynamically adjusts flight schedules to avoid congestion. Aircraft are spaced optimally, and flight paths are altered as necessary to avoid airspace conflicts. This system minimizes delays, reduces fuel consumption, and supports smoother operations during peak hours.</li>
+        <li><strong>Runway and Airport Operations Coordination:</strong> We manage operations across multiple airports by optimizing runway scheduling, taxiing paths, and gate assignments. By coordinating all aspects of airport traffic—from takeoffs to landings—we can minimize turnaround time, reduce delays, and improve passenger flow.</li>
+        <li><strong>Emergency Response Protocols:</strong> In case of emergencies, such as technical failures, severe weather, or other unexpected events, our system has rapid-response protocols in place. These protocols help ensure that air traffic controllers can manage re-routes, diversions, and emergency landings smoothly and efficiently, keeping safety at the forefront.</li>
+        <li><strong>Real-Time Monitoring and Alerts:</strong> Our real-time monitoring system provides continuous oversight of the airspace and ground operations. Automated alerts are sent to air traffic controllers and airlines regarding any incidents or deviations from standard operations, such as flight delays, runway closures, or airspace congestion.</li>
+        <li><strong>Data-Driven Analytics and Reporting:</strong> We collect and analyze performance data to generate real-time traffic insights and reports. These reports help airport authorities and airlines monitor the efficiency of their operations, identify bottlenecks, and make data-driven decisions to improve traffic flow and operational safety.</li>
+    </ul>
+
+    <h3>Benefits of Our Traffic Management System</h3>
+    <p>Our system has been designed with several key benefits in mind:</p>
+    <ul>
+        <li><strong>Enhanced Safety:</strong> By providing real-time updates and ensuring airspace coordination, our system significantly reduces the likelihood of mid-air collisions and ground incidents.</li>
+        <li><strong>Improved Operational Efficiency:</strong> The optimization of flight scheduling and runway assignments leads to fewer delays, improved fuel efficiency, and better utilization of airport resources.</li>
+        <li><strong>Reduced Environmental Impact:</strong> Our system promotes eco-friendly practices by optimizing flight routes, reducing fuel consumption, and minimizing the environmental footprint of airport operations.</li>
+        <li><strong>Cost Reduction for Airlines:</strong> By minimizing delays and optimizing scheduling, airlines can reduce fuel costs, improve aircraft utilization, and lower operational overhead.</li>
+        <li><strong>Scalability and Adaptability:</strong> Our system is designed to scale and adapt to airports of all sizes, from small regional airports to large international hubs. Whether you're managing a single runway or multiple terminals, our traffic management system is flexible and scalable to suit your needs.</li>
+    </ul>
+    <h3>Future Enhancements</h3>
+    <p>We are continuously working on enhancing our system. Future improvements include:</p>
+    <ul>
+        <li><strong>AI-Powered Predictive Analytics:</strong> Implementing machine learning to predict traffic patterns and flight delays before they occur, enabling preemptive actions.</li>
+        <li><strong>Autonomous Aircraft Integration:</strong> Preparing the system for the future integration of autonomous and remotely-piloted aircraft, ensuring safe and efficient traffic management.</li>
+        <li><strong>Expanded Data Sharing:</strong> Allowing better collaboration between airports, airlines, and air traffic control services globally, leading to smoother international flight operations.</li>
+    </ul>
+    
+    <h3>Conclusion</h3>
+    <p>Our Traffic Management Information system plays a vital role in optimizing the flow of air traffic, ensuring that airports can handle the growing demand for air travel while maintaining the highest standards of safety and operational efficiency. Whether it's coordinating takeoffs and landings, responding to emergencies, or providing real-time data to air traffic controllers, our system helps make air travel smoother, safer, and more reliable.</p>
+</div>
+
+
+
+    <div id="weather" class="content-box">
+<h2>Weather Insights for Mumbai</h2>
+    <p>Stay updated with the latest weather conditions in Mumbai, which may affect air travel:</p>
+    <h3>Current Conditions</h3>
+    <p>The weather in Mumbai is currently <strong>partly cloudy</strong> with moderate temperatures. The city is experiencing temperatures around <strong>30°C (86°F)</strong>, with a gentle breeze coming from the southeast at around <strong>10 km/h</strong>. The humidity level is relatively high at <strong>75%</strong>, which is typical for this time of year.</p>
+    
+    <h3>Forecast for the Next Few Days</h3>
+    <ul>
+        <li><strong>Tomorrow:</strong> Expect clear skies in the morning with a few clouds building up by the afternoon. The temperature will hover around <strong>32°C (89.6°F)</strong>, and there is a chance of light rain showers in the evening. Winds will be moderate, around <strong>12 km/h</strong>.</li>
+        <li><strong>Day After Tomorrow:</strong> A mix of sunshine and light clouds will dominate the day. The temperature will be slightly cooler, around <strong>28°C (82.4°F)</strong). Winds will be stronger, gusting up to <strong>20 km/h</strong>, which could affect visibility and flight operations.</li>
+        <li><strong>Next Week:</strong> Mumbai is likely to experience a period of <strong>monsoonal showers</strong>, with scattered rain throughout the day. Temperatures will range from <strong>28°C (82.4°F)</strong> to <strong>31°C (87.8°F)</strong>, and there could be reduced visibility at times, which may lead to delays in airport traffic.</li>
+    </ul>
+
+    <h3>Impact on Air Travel</h3>
+    <p>The current weather conditions, with moderate winds and occasional showers, are unlikely to cause significant disruption. However, travelers should be aware of possible delays during monsoon seasons or when heavy rain affects visibility or runway conditions. It's recommended to check flight status and stay informed of real-time updates provided by airlines and airport authorities.</p>
+By staying informed with our Weather Insights, airlines can make quick decisions, ensuring every journey is as safe and smooth as possible.
+</p>
+    </div>
+
+    <div id="contact" class="chat">
+        <h2>Contact Us</h2>
+        <p>For inquiries, please reach out at:</p>
+        <p>Email: support@airlinetrafficmanagement.com</p>
+        <p>Phone: +1 (555) 012-3456</p>
+	<p> Or chat with our chatbot</p>
+	<a href="chatbot.html">Click here to chat</a>
+    </div>
+
+    <!-- Login Section -->
+    <div id="login" class="content-box">
+        <div class="form-box">
+            <h2>Login</h2>
+            <div class="input-container">
+                <input type="text" id="username" placeholder="Username">
+            </div>
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Password">
+            </div>
+            <button onclick="login()">Login</button>
+            <a href="#" onclick="showSection('forgot')">Forgot Password?</a>
+            <a href="#" onclick="showSection('register')">Register</a>
+        </div>
+    </div>
+
+    <!-- Registration Section -->
+    <div id="register" class="content-box">
+        <div class="form-box">
+            <h2>Register</h2>
+            <div class="input-container">
+                <input type="text" id="newUsername" placeholder="Username">
+            </div>
+            <div class="input-container">
+                <input type="email" id="email" placeholder="Email">
+            </div>
+            <div class="input-container">
+                <input type="password" id="newPassword" placeholder="Password">
+            </div>
+            <button onclick="register()">Register</button>
+            <a href="#" onclick="showSection('login')">Back to Login</a>
+        </div>
+    </div>
+
+    <!-- Forgot Password Section -->
+    <div id="forgot" class="content-box">
+        <div class="form-box">
+            <h2>Reset Password</h2>
+            <div class="input-container">
+                <input type="email" id="resetEmail" placeholder="Email">
+            </div>
+            <button onclick="resetPassword()">Send Reset Link</button>
+            <a href="#" onclick="showSection('login')">Back to Login</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Airline Traffic Management. All rights reserved.</p>
+</footer>
+
+<script>
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username === 'a' && password === 'a') {
+            alert('Login successful as user A');
+            window.location.href = 'Update.html'; // Redirect to a specific file for user 'a'
+        } else if (username === 'b' && password === 'b') {
+            alert('Login successful as user B');
+            window.location.href = 'Display.html'; // Redirect to a specific file for user 'b'
+        } else {
+            alert('Login successful as user C');
+            window.location.href = 'index.html'; // Redirect to a specific file for user 'b'
+        }
+    }
+
+    function register() {
+        alert('Registration successful');
+        showSection('login');
+    }
+
+    function resetPassword() {
+        alert('A password reset link has been sent to your email.');
+        showSection('login');
+    }
+
+    function showSection(sectionId) {
+        document.querySelectorAll('.content-box').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+document.querySelectorAll('.chat').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+    
+    }
+
+</script>
+
+</body>
+</html>
