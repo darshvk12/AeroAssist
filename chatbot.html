@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Chatbot Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+        }
+
+        .chat-container {
+            border: 2px solid #0088cc;
+            border-radius: 10px;
+            width: 350px;
+            max-width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            border: 1px solid #ccc;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e6f7ff;
+            flex-grow: 1;
+        }
+
+        input {
+            width: 80%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #006f9b;
+        }
+
+        .chat-message {
+            margin: 10px 0;
+        }
+
+        .user-message {
+            text-align: right;
+            color: #1a73e8;
+        }
+
+        .assistant-message {
+            text-align: left;
+            color: #0088cc;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div id="chat-box" class="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your question here..." onkeypress="if(event.key === 'Enter') getResponse()">
+        <button onclick="getResponse()">Send</button>
+    </div>
+
+    <script>
+        let bookingStep = 0;
+        let bookingDetails = {};
+
+        // Function to get chatbot response
+        function getResponse() {
+            const userInput = document.getElementById("user-input").value.trim();
+            const chatBox = document.getElementById("chat-box");
+
+            if (userInput) {
+                // Display user input in chat box
+                displayMessage(userInput, 'user');
+                document.getElementById("user-input").value = "";
+
+                // Default response
+                let response = "";
+
+                if (bookingStep > 0) {
+                    handleBookingProcess(userInput, chatBox);
+                    return;
+                }
+
+                if (userInput.toLowerCase().includes("book ticket")) {
+                    response = "Please select your flight:\n1. Flight 101 - Mumbai to Delhi (Dep: 10:00 AM, Arr: 12:30 PM)\n2. Flight 202 - Delhi to Mumbai (Dep: 1:00 PM, Arr: 3:30 PM)\n3. Flight 303 - Mumbai to Delhi (Dep: 5:00 PM, Arr: 7:30 PM)\nType the flight number to continue.";
+                    bookingStep = 1;
+                } else if (userInput.toLowerCase().includes("runway status")) {
+                    response = getRunwayStatus();
+                } else if (userInput.toLowerCase().includes("baggage policy")) {
+                    response = getBaggagePolicy();
+                } else {
+                    response = "I'm not sure about that. Please ask an airport official for more detailed information.";
+                }
+
+                // Display assistant response
+                displayMessage(response, 'assistant');
+            }
+        }
+
+        // Function to handle booking process
+        function handleBookingProcess(userInput, chatBox) {
+            let response = "";
+
+            if (bookingStep === 1) {
+                bookingDetails.flight = userInput;
+                response = "Please enter your name.";
+                bookingStep = 2;
+            } else if (bookingStep === 2) {
+                bookingDetails.passengerName = userInput;
+                response = "Please enter your email address.";
+                bookingStep = 3;
+            } else if (bookingStep === 3) {
+                bookingDetails.email = userInput;
+                response = "Type '1' to confirm your booking.";
+                bookingStep = 4;
+            } else if (bookingStep === 4 && userInput === "1") {
+                bookingDetails.date = new Date().toLocaleString();
+                localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
+                response = "Thank you for flying with us! Your booking is confirmed.";
+                bookingStep = 0;
+                bookingDetails = {};
+            } else {
+                response = "Invalid input. Please type '1' to confirm your booking.";
+            }
+
+            displayMessage(response, 'assistant');
+        }
+
+        // Function to get runway status
+        function getRunwayStatus() {
+            const runwayId = localStorage.getItem('runwayId');
+            const status = localStorage.getItem('status');
+            const city = localStorage.getItem('city');
+
+            if (runwayId && status && city) {
+                return `Runway ID: ${runwayId}, Status: ${status}, City: ${city}`;
+            } else {
+                return "No runway status available. Please update the status first.";
+            }
+        }
+
+        // Function to get baggage policy
+        function getBaggagePolicy() {
+            return `In India, many airlines follow similar baggage policies:
+
+1. **Checked-in Baggage**:
+- Economy Class: 15-25 kg
+- Business/First Class: 30-35 kg
+- Additional baggage incurs extra fees (₹500-₹1000 per kg).
+
+2. **Cabin/Hand Baggage**:
+- Economy Class: 1 piece, 7-10 kg.
+- Business/First Class: 2 pieces, 12-15 kg combined.
+- Max dimensions for hand baggage: 55 cm x 35 cm x 25 cm.
+
+3. **Special Items**:
+- Infants: 1 piece of checked-in baggage up to 10 kg.
+- Special items like sports equipment may incur extra charges.
+
+4. **Additional Items**:
+- 1 personal item like a handbag, laptop, or duty-free purchases is allowed.`;
+        }
+
+        // Function to display messages in chat box
+        function displayMessage(message, sender) {
+            const chatBox = document.getElementById("chat-box");
+            const messageDiv = document.createElement("div");
+
+            if (sender === 'user') {
+                messageDiv.classList.add("chat-message", "user-message");
+            } else {
+                messageDiv.classList.add("chat-message", "assistant-message");
+            }
+
+            messageDiv.innerHTML = `<strong>${sender === 'user' ? 'You' : 'Assistant'}:</strong> ${message}`;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
