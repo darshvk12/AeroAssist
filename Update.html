@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Runway Status</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #00695c;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #004d40;
+    display: block;
+}
+
+input,select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #004d40;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #004d40;
+    background-color: #e0f2f1;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus{
+    border-color: #00796b;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #004d40;
+}
+
+.status-display {
+    margin-top: 30px;
+    background-color: #f1f8e9;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #7cb342;
+}
+
+.status-display p {
+    font-size: 1.1rem;
+    color: #388e3c;
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Runway Status</h1>
+        <form id="runwayForm">
+            <div class="form-group">
+                <label for="runwayId">Runway ID</label>
+                <input type="text" id="runwayId" placeholder="Enter runway ID" required>
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <input type="text" id="status" placeholder="Enter runway status" required>
+            </div>
+ <div class="form-group">
+                <label for="city">City</label>
+                <select id="city" required>
+                    <option value="" disabled selected>Select a city</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                </select>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="updateMessage" class="status-display"></div>
+    </div>
+
+    <script>
+document.getElementById('runwayForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const runwayId = document.getElementById('runwayId').value;
+    const status = document.getElementById('status').value;
+    const city=document.getElementById('city').value;
+
+    // Save the updated runway status in localStorage
+    localStorage.setItem('runwayId', runwayId);
+    localStorage.setItem('status', status);
+
+    // Show confirmation message
+    const updateMessage = document.getElementById('updateMessage');
+    updateMessage.innerHTML = `
+        <p><strong>Runway ID:</strong> ${runwayId}</p>
+        <p><strong>Status:</strong> ${status}</p>
+	<p><strong>City:</strong> ${city}</p>
+        <p>Runway status updated successfully!</p>
+    `;
+});
+
+</script>
+</body>
+</html>
